@@ -3,26 +3,36 @@ from re import sub
 from decimal import Decimal
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
 
-PRODUCT_URL = "https://www.ikea.com/ru/ru/p/djungelskog-dyungelskog-myagkaya-igrushka-buryy-medved-80402833/"
+pr_url = "https://htmlacademy-schools.github.io/1902641-big-trip-1/13/"
 
 headers = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.134 YaBrowser/22.7.0.1842 Yowser/2.5 Safari/537.36"
+    'sec-ch-ua': '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
+    'Referer': 'https://htmlacademy-schools.github.io/1902641-big-trip-1/13/',
+    'sec-ch-ua-mobile': '?0',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
+    'sec-ch-ua-platform': '"Windows"',
 }
-page = requests.get(url = PRODUCT_URL,headers= headers)
-# print(page.content)
+
+response = requests.get('https://htmlacademy-schools.github.io/1902641-big-trip-1/13/bundle.js', headers=headers)
+
+driver = webdriver.Chrome(executable_path= "../chromedriver.exe")
+driver.get(pr_url)
+html = driver.page_source
 
 soup = BeautifulSoup(html, "lxml")
-product_title = soup.find(
-    "h1",
-    class_="pip-header-section"
-).get_text()
+title = soup.find("h3", class_="event__title")
+print(title.get_text())
 
-print(product_title)
-# product_price = soup.find("div", class_="pip-price").get_text()
-# product_price = product_price.replace(",", ".")
-# product_price_int = Decimal(sub(r"[^\d\-.]", "", product_price))
-# #  print(price, type(price), price_int, type(price_int))
+product_price = soup.find("p", class_="event__price").get_text()
+product_price = product_price.replace(",", ".")
+product_price_int = Decimal(sub(r"[^\d\-.]", "", product_price))
+# print(price, type(price), price_int, type(price_int))
+print(product_price)
+
+driver.close()
+driver.quit()
 
 # from datetime import datetime
 # from sqlalchemy.orm import Session
