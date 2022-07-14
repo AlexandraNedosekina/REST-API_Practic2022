@@ -25,11 +25,11 @@ soup = BeautifulSoup(html, "lxml")
 title = soup.find("h3", class_="event__title")
 print(title.get_text())
 
-product_price = soup.find("p", class_="event__price").get_text()
-product_price = product_price.replace(",", ".")
-product_price_int = Decimal(sub(r"[^\d\-.]", "", product_price))
+price = soup.find("p", class_="event__price").get_text()
+price = price.replace(",", ".")
+price_int = Decimal(sub(r"[^\d\-.]", "", price))
 # print(price, type(price), price_int, type(price_int))
-print(product_price)
+print(price, price_int)
 
 driver.close()
 driver.quit()
@@ -58,7 +58,7 @@ driver.quit()
 
 # session = Session(bind=engine)
 
-# def add_price(title, price, price_int):
+# def add_price(title, price):
 #     is_exist = session.query(Price).filter(
 #         Price.name==title
 #     ).order_by(Price.datetime.desc()).first()
@@ -86,7 +86,7 @@ driver.quit()
 #             session.commit()
 
 
-# add_price(product_title, product_price, product_price_int)
+# add_price(title, price)
 
 # items = session.query(Price).all()
 # for item in items:
