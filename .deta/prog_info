@@ -1,0 +1,1 @@
+{"id":"eaa9f63e-1c48-4de8-bbea-1f134f67a433","space":26535,"runtime":"python3.9","name":"REST-API_Practic2022","path":"8qiitt","project":"c07h8cov","account":"144798365827","region":"ap-southeast-1","deps":["fastapi"],"envs":null,"public":true,"log_level":"debug","cron":""}

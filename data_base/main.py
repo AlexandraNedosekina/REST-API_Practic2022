@@ -18,6 +18,14 @@ def get_db():
         yield db
     finally:
         db.close()
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 
 @app.post("/prices/", response_model=schemas.Price)
