@@ -32,7 +32,7 @@ def create_price(db: Session, price: schemas.PriceCreate):
     db.refresh(db_price)
     return db_price
 
-def delete_price(db: Session, price_id: int):
+def delete_price(db: Session, price_id: int, price: schemas.PriceCreate):
     item = db.query(models.Price).filter(models.Price.id == price_id).delete()
     db.commit()
     return

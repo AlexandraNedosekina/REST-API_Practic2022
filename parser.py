@@ -1,4 +1,5 @@
 from cgitb import html
+from email.mime import base
 from re import sub
 from decimal import Decimal
 import requests
@@ -29,65 +30,65 @@ price = soup.find("p", class_="event__price").get_text()
 price = price.replace(",", ".")
 price_int = Decimal(sub(r"[^\d\-.]", "", price))
 # print(price, type(price), price_int, type(price_int))
-print(price, price_int)
+time_trip = soup.find("div", class_="event__schedule").get_text()
+print(price, time_trip)
 
 driver.close()
 driver.quit()
 
-# from datetime import datetime
-# from sqlalchemy.orm import Session
-# from sqlalchemy import create_engine, Column, Integer, String, Numeric, DateTime
-# from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, Column, Integer, String, Numeric, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 
-# Base = declarative_base()
+Base = declarative_base()
 
-# class Price(Base):
-#     __tablename__ = "price"
+class Price(Base):
+    __tablename__ = "trip"
 
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String)
-#     datetime = Column(DateTime)
-#     price = Column(String(64))
-#     price_int = Column(Numeric(10, 2))
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    datetime = Column(String)
+    price = Column(String(64))
+    price_int = Column(Numeric(10, 2))
 
-#     def __repr__(self):
-#         return f"{self.name} | {self.price}"
+    def __repr__(self):
+        return f"{self.name} | {self.price}"
 
-# engine = create_engine("sqlite:///database.sqlite")
-# Base.metadata.create_all(engine)
+engine = create_engine("sqlite:///./database.sqlite")
+Base.metadata.create_all(engine)
 
-# session = Session(bind=engine)
+session = Session(bind=engine)
 
-# def add_price(title, price):
-#     is_exist = session.query(Price).filter(
-#         Price.name==title
-#     ).order_by(Price.datetime.desc()).first()
+def add_price(title, price):
+    is_exist = session.query(Price).filter(
+        Price.name==title
+    ).order_by(Price.datetime.desc()).first()
 
-#     if not is_exist:
-#         session.add(
-#             Price(
-#                 name=title,
-#                 datetime=datetime.now(),
-#                 price=price,
-#                 price_int=price_int
-#             )
-#         )
-#         session.commit()
-#     else:
-#         if is_exist.price_int != price_int:
-#             session.add(
-#                 Price(
-#                     name=title,
-#                     datetime=datetime.now(),
-#                     price=price,
-#                     price_int=price_int
-#                 )
-#             )
-#             session.commit()
+    if not is_exist:
+        session.add(
+            Price(
+                name=title,
+                datetime=datetime.now(),
+                price=price,
+                price_int=price_int
+            )
+        )
+        session.commit()
+    else:
+        if is_exist.price_int != price_int:
+            session.add(
+                Price(
+                    name=title,
+                    datetime=datetime.now(),
+                    price=price,
+                    price_int=price_int
+                )
+            )
+            session.commit()
 
+add_price(title, price)
 
-# add_price(title, price)
-
-# items = session.query(Price).all()
-# for item in items:
-#     print(item)
+items = session.query(Price).all()
+for item in items:
+    print(item)
